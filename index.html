@@ -24,10 +24,12 @@
         <div class="col-md-8 order-md-2">
           <h4 class="d-flex justify-content-between align-items-center mb-3">
             <span>Detail of your certificate</span>
+            <span id ="countHolders" class="badge badge-secondary badge-pill">0</span>
           </h4>
           <div class="card d-flex px-5 py-5">
             <div class="card-body py-5">
               <h1 class="card-title text-center mb-5">Certificate of Completion</h1>
+              <p id="blockHash"></p>
               <div class="card-text">
                 <p class="text-muted">This is to certify that </p>
                 <h5 id ="name"></h5>
@@ -74,21 +76,31 @@
         // Set the provider you want from Web3.providers
         web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
       }
-      var abi = [ { "constant": false, "inputs": [ { "name": "_name", "type": "string" }, { "name": "_level", "type": "uint256" } ], "name": "setCertificate", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "payable": false, "stateMutability": "nonpayable", "type": "constructor" }, { "anonymous": false, "inputs": [ { "indexed": false, "name": "name", "type": "string" }, { "indexed": false, "name": "level", "type": "uint256" } ], "name": "Certificate", "type": "event" }, { "constant": true, "inputs": [], "name": "getCertificate", "outputs": [ { "name": "", "type": "string" }, { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "level", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "name", "outputs": [ { "name": "", "type": "string" } ], "payable": false, "stateMutability": "view", "type": "function" } ];
-      var contractAddress = "0xa14f1eeced9037a1742f4c04438aa789789fc321";
+      var abi = [ { "constant": false, "inputs": [ { "name": "_address", "type": "address" }, { "name": "_name", "type": "bytes16" }, { "name": "_level", "type": "uint256" } ], "name": "setHolder", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "anonymous": false, "inputs": [ { "indexed": false, "name": "name", "type": "bytes16" }, { "indexed": false, "name": "level", "type": "uint256" } ], "name": "HolderInfo", "type": "event" }, { "constant": true, "inputs": [], "name": "countHolders", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "_address", "type": "address" } ], "name": "getHolder", "outputs": [ { "name": "", "type": "bytes16" }, { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "getHolders", "outputs": [ { "name": "", "type": "address[]" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "uint256" } ], "name": "holderAccts", "outputs": [ { "name": "", "type": "address" } ], "payable": false, "stateMutability": "view", "type": "function" } ];
+      var contractAddress = "0x83cd71bb21fe7415cec0fb155f506e24544d8a35";
       async function init(){
         Hashcademy = await new web3.eth.Contract(abi, contractAddress);
         var accounts = await web3.eth.getAccounts();
         web3.eth.defaultAccount = accounts[0];
       }
       init();
+
+      async function count(){
+        Hashcademy.methods.countHolders().call().then(function(result){
+          document.getElementById('countHolders').textContent = result;
+        });
+
+      }
+
       async function register(){
-        var fullName = document.getElementById('fullName').value;
+        var fullName = web3.utils.asciiToHex(document.getElementById('fullName').value);
         var levelOfStudy = document.getElementById('levelOfStudy').value;
-        Hashcademy.methods.setCertificate(fullName, levelOfStudy).send({from: web3.eth.defaultAccount}).on('receipt', function(receipt){
+        Hashcademy.methods.setHolder(web3.eth.defaultAccount, fullName, levelOfStudy).send({from: web3.eth.defaultAccount, gas: 3000000}).on('receipt', function(receipt){
           document.getElementById('error').style.display = 'none';
-          document.getElementById('name').textContent = receipt.events.Certificate.returnValues.name;
-          document.getElementById('level').textContent = receipt.events.Certificate.returnValues.level;
+          document.getElementById('blockHash').textContent = receipt.blockHash;
+          document.getElementById('name').textContent = web3.utils.hexToAscii(receipt.events.HolderInfo.returnValues.name);
+          document.getElementById('level').textContent = receipt.events.HolderInfo.returnValues.level;
+          count();
         }).on('error', function(error){
           document.getElementById('error').style.display = 'block';
           document.getElementById('error').textContent = error;
