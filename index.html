@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+ 
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+     <!-- web3.js 1.0.0 -->    
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.36/dist/web3.min.js" integrity="sha256-nWBTbvxhJgjslRyuAKJHK+XcZPlCnmIAAMixz6EefVk=" crossorigin="anonymous"></script>
+ 
+ 
+    <title>Register Certificate on Blockchain</title>
+  </head>
+  <body class="bg-light">
+ 
+    <div class="container">
+      <div class="py-5 text-center">
+        <h2>Register Certificate on Blockchain</h2>
+      </div>
+ 
+      <div class="row">
+        <div class="col-md-8 order-md-2">
+          <h4 class="d-flex justify-content-between align-items-center mb-3">
+            <span>Detail of your certificate</span>
+          </h4>
+          <div class="card d-flex px-5 py-5">
+            <div class="card-body py-5">
+              <h1 class="card-title text-center mb-5">Certificate of Completion</h1>
+              <div class="card-text">
+                <p class="text-muted">This is to certify that </p>
+                <h5 id ="name"></h5>
+                <p class="text-muted">has completed the </p>
+                <h5>level <span  id ="level"></span> of the blockchain course</h5>
+                <p class="text-right mt-5""><img src="https://s3-ap-southeast-1.amazonaws.com/hashreader/hashcademy-logo.png" alt="" style="width: 180px;"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 order-md-1">
+          <h4 class="text-muted">Input the detail of certificate</h4>
+              <div class="mb-3">
+                <label for="username">Full Name</label>
+                <input type="text" class="form-control" id="fullname" placeholder="Full Name" required>
+              </div>
+              <div class="mb-3">
+                <label for="username">Level of Study</label>
+                <input type="text" class="form-control" id="levelOfStudy" placeholder="Level of Study" required>
+              </div>
+            <hr class="mb-4">
+            <button id="button" class="btn btn-primary btn-lg btn-block">Register
+            </button>
+        </div>
+      </div>
+ 
+      <footer class="my-5 pt-5 text-muted text-center text-small">
+        <p class="mb-1">&copy; 2019 Hashcademy</p>
+      </footer>
+    </div>
+ 
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script>
+ 
+      // Input our code here 
+      
+    </script>
+  </body>
+</html>
