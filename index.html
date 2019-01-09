@@ -41,6 +41,7 @@
         <div class="col-md-4 order-md-1">
           <h4 class="text-muted">Input the detail of certificate</h4>
               <div class="mb-3">
+                <p id="error" class="text-danger"></p>
                 <label for="username">Full Name</label>
                 <input type="text" class="form-control" id="fullName" placeholder="Full Name" required>
               </div>
@@ -85,8 +86,12 @@
         var fullName = document.getElementById('fullName').value;
         var levelOfStudy = document.getElementById('levelOfStudy').value;
         Hashcademy.methods.setCertificate(fullName, levelOfStudy).send({from: web3.eth.defaultAccount}).on('receipt', function(receipt){
+          document.getElementById('error').style.display = 'none';
           document.getElementById('name').textContent = receipt.events.Certificate.returnValues.name;
           document.getElementById('level').textContent = receipt.events.Certificate.returnValues.level;
+        }).on('error', function(error){
+          document.getElementById('error').style.display = 'block';
+          document.getElementById('error').textContent = error;
         });
       }
       document.getElementById('button').addEventListener('click', register);
