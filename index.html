@@ -32,8 +32,8 @@
                 <p class="text-muted">This is to certify that </p>
                 <h5 id ="name"></h5>
                 <p class="text-muted">has completed the </p>
-                <h5>level <span  id ="level"></span> of the blockchain course</h5>
-                <p class="text-right mt-5""><img src="https://s3-ap-southeast-1.amazonaws.com/hashreader/hashcademy-logo.png" alt="" style="width: 180px;"></p>
+                <h5>level <span id ="level"></span> of the blockchain course</h5>
+                <p class="text-right mt-5"><img src="https://s3-ap-southeast-1.amazonaws.com/hashreader/hashcademy-logo.png" alt="" style="width: 180px;"></p>
               </div>
             </div>
           </div>
@@ -73,23 +73,21 @@
         // Set the provider you want from Web3.providers
         web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
       }
-      var abi = [ { "constant": false, "inputs": [ { "name": "_name", "type": "string" }, { "name": "_level", "type": "uint256" } ], "name": "setCertificate", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "getCertificate", "outputs": [ { "name": "", "type": "string" }, { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "level", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "name", "outputs": [ { "name": "", "type": "string" } ], "payable": false, "stateMutability": "view", "type": "function" } ];
-      var contractAddress = "0x0173ec955ea53646ff646c70e552cebf254d0caa";
+      var abi = [ { "constant": false, "inputs": [ { "name": "_name", "type": "string" }, { "name": "_level", "type": "uint256" } ], "name": "setCertificate", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "payable": false, "stateMutability": "nonpayable", "type": "constructor" }, { "anonymous": false, "inputs": [ { "indexed": false, "name": "name", "type": "string" }, { "indexed": false, "name": "level", "type": "uint256" } ], "name": "Certificate", "type": "event" }, { "constant": true, "inputs": [], "name": "getCertificate", "outputs": [ { "name": "", "type": "string" }, { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "level", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "name", "outputs": [ { "name": "", "type": "string" } ], "payable": false, "stateMutability": "view", "type": "function" } ];
+      var contractAddress = "0xa14f1eeced9037a1742f4c04438aa789789fc321";
       async function init(){
         Hashcademy = await new web3.eth.Contract(abi, contractAddress);
         var accounts = await web3.eth.getAccounts();
         web3.eth.defaultAccount = accounts[0];
-        Hashcademy.methods.getCertificate().call().then(function(result){
-          document.getElementById('name').textContent = result[0];
-          document.getElementById('level').textContent =result[1];
-        });
-        
       }
       init();
       async function register(){
         var fullName = document.getElementById('fullName').value;
         var levelOfStudy = document.getElementById('levelOfStudy').value;
-        Hashcademy.methods.setCertificate(fullName, levelOfStudy).send({from: web3.eth.defaultAccount}).then(console.log);
+        Hashcademy.methods.setCertificate(fullName, levelOfStudy).send({from: web3.eth.defaultAccount}).on('receipt', function(receipt){
+          document.getElementById('name').textContent = receipt.events.Certificate.returnValues.name;
+          document.getElementById('level').textContent = receipt.events.Certificate.returnValues.level;
+        });
       }
       document.getElementById('button').addEventListener('click', register);
     </script>
