@@ -42,7 +42,7 @@
           <h4 class="text-muted">Input the detail of certificate</h4>
               <div class="mb-3">
                 <label for="username">Full Name</label>
-                <input type="text" class="form-control" id="fullname" placeholder="Full Name" required>
+                <input type="text" class="form-control" id="fullName" placeholder="Full Name" required>
               </div>
               <div class="mb-3">
                 <label for="username">Level of Study</label>
@@ -67,7 +67,31 @@
     <script>
  
       // Input our code here 
-      
+      if (typeof web3 !== 'undefined') {
+        web3 = new Web3(web3.currentProvider);
+      } else {
+        // Set the provider you want from Web3.providers
+        web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
+      }
+      var abi = [ { "constant": false, "inputs": [ { "name": "_name", "type": "string" }, { "name": "_level", "type": "uint256" } ], "name": "setCertificate", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "getCertificate", "outputs": [ { "name": "", "type": "string" }, { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "level", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "name", "outputs": [ { "name": "", "type": "string" } ], "payable": false, "stateMutability": "view", "type": "function" } ];
+      var contractAddress = "0x0173ec955ea53646ff646c70e552cebf254d0caa";
+      async function init(){
+        Hashcademy = await new web3.eth.Contract(abi, contractAddress);
+        var accounts = await web3.eth.getAccounts();
+        web3.eth.defaultAccount = accounts[0];
+        Hashcademy.methods.getCertificate().call().then(function(result){
+          document.getElementById('name').textContent = result[0];
+          document.getElementById('level').textContent =result[1];
+        });
+        
+      }
+      init();
+      async function register(){
+        var fullName = document.getElementById('fullName').value;
+        var levelOfStudy = document.getElementById('levelOfStudy').value;
+        Hashcademy.methods.setCertificate(fullName, levelOfStudy).send({from: web3.eth.defaultAccount}).then(console.log);
+      }
+      document.getElementById('button').addEventListener('click', register);
     </script>
   </body>
 </html>
